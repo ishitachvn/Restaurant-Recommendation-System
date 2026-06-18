@@ -5,6 +5,7 @@ from sklearn.metrics.pairwise import cosine_similarity
 # Load cleaned dataset
 data = pd.read_csv("dataset/cleaned_zomato.csv")
 
+
 # Create a combined feature column
 data["features"] = (
     data["cuisines type"] + " " +

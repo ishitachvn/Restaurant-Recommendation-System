@@ -5,6 +5,7 @@ data = pd.read_csv("dataset/zomato.csv")
 
 # Select useful columns
 data = data[['restaurant name',
+             'restaurant type',
              'cuisines type',
              'rate (out of 5)',
              'avg cost (two people)']]
