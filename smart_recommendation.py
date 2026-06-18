@@ -8,7 +8,8 @@ def recommend_restaurants(
     cuisine,
     budget,
     min_rating,
-    restaurant_type
+    restaurant_type,
+    location
 ):
 
     filtered = data[
@@ -21,6 +22,14 @@ def recommend_restaurants(
         (
             data["restaurant type"].str.contains(
                 restaurant_type,
+                case=False,
+                na=False
+            )
+        )
+        &
+        (
+            data["area"].str.contains(
+                location,
                 case=False,
                 na=False
             )
@@ -41,3 +50,14 @@ def recommend_restaurants(
             "avg cost (two people)"
         ]
     ].head(10)
+
+if __name__ == "__main__":
+    results = recommend_restaurants(
+        cuisine="Indian",
+        budget=500,
+        min_rating=4.0,
+        restaurant_type="Quick Bites",
+        location="HSR"
+    )
+
+    print(results)

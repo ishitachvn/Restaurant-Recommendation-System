@@ -13,12 +13,14 @@ def recommend():
     budget = float(user_data.get("budget"))
     rating = float(user_data.get("rating"))
     restaurant_type = user_data.get("restaurant_type")
+    location = user_data.get("location")
 
     results = recommend_restaurants(
         cuisine,
         budget,
         rating,
-        restaurant_type
+        restaurant_type,
+        location
     )
 
     return jsonify(
@@ -28,3 +30,4 @@ def recommend():
 
 if __name__ == "__main__":
     app.run(debug=True)
+
