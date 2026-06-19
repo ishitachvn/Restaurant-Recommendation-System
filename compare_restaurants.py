@@ -89,9 +89,12 @@ def compare_restaurants(restaurant1, restaurant2):
 
 if __name__ == "__main__":
 
+    restaurant1 = input("Enter first restaurant: ")
+    restaurant2 = input("Enter second restaurant: ")
+
     result = compare_restaurants(
-        "Empire Restaurant",
-        "Meghana Foods"
+        restaurant1,
+        restaurant2
     )
 
     print(result)
