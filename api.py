@@ -31,3 +31,20 @@ def recommend():
 if __name__ == "__main__":
     app.run(debug=True)
 
+
+from compare_restaurants import compare_restaurants
+
+@app.route("/compare", methods=["POST"])
+def compare():
+
+    user_data = request.json
+
+    restaurant1 = user_data.get("restaurant1")
+    restaurant2 = user_data.get("restaurant2")
+
+    results = compare_restaurants(
+        restaurant1,
+        restaurant2
+    )
+
+    return jsonify(results)
