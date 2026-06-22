@@ -75,21 +75,3 @@ def recommend_restaurants(
         ]
     ].head(10)
 
-
-if __name__ == "__main__":
-
-    results = recommend_restaurants(
-        city="Mumbai",
-        cuisine="Indian",
-        budget=1000,
-        min_rating=4.0,
-        restaurant_type="Restaurant"
-    )
-
-for _, row in results.iterrows():
-
-    print("\nRestaurant:", row["restaurant name"])
-    print("Cuisine:", row["cuisines type"])
-    print("Rating:", row["rate (out of 5)"])
-    print("Cost:", row["avg cost (two people)"])
-    print("City:", row["city"])

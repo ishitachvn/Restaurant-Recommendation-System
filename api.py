@@ -1,5 +1,7 @@
 from flask import Flask, request, jsonify
+
 from smart_recommendation import recommend_restaurants
+from compare_restaurants import compare_restaurants
 
 app = Flask(__name__)
 
@@ -9,30 +11,25 @@ def recommend():
 
     user_data = request.json
 
+    city = user_data.get("city")
     cuisine = user_data.get("cuisine")
     budget = float(user_data.get("budget"))
-    rating = float(user_data.get("rating"))
+    min_rating = float(user_data.get("min_rating"))
     restaurant_type = user_data.get("restaurant_type")
-    location = user_data.get("location")
 
     results = recommend_restaurants(
+        city,
         cuisine,
         budget,
-        rating,
-        restaurant_type,
-        location
+        min_rating,
+        restaurant_type
+
     )
 
     return jsonify(
         results.to_dict(orient="records")
     )
 
-
-if __name__ == "__main__":
-    app.run(debug=True)
-
-
-from compare_restaurants import compare_restaurants
 
 @app.route("/compare", methods=["POST"])
 def compare():
@@ -48,3 +45,7 @@ def compare():
     )
 
     return jsonify(results)
+
+
+if __name__ == "__main__":
+    app.run(debug=True)
