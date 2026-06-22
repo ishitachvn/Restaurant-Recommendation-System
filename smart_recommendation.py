@@ -1,18 +1,48 @@
 import pandas as pd
 
-# Load dataset
-data = pd.read_csv("dataset/cleaned_zomato.csv")
+# Load final merged dataset
+data = pd.read_csv("dataset/final_restaurants.csv")
+
+# Convert cost column to numeric
+data["avg cost (two people)"] = (
+    data["avg cost (two people)"]
+    .astype(str)
+    .str.replace("₹", "", regex=False)
+    .str.replace(",", "", regex=False)
+)
+
+data["avg cost (two people)"] = pd.to_numeric(
+    data["avg cost (two people)"],
+    errors="coerce"
+)
+
+# Convert rating column to numeric
+data["rate (out of 5)"] = pd.to_numeric(
+    data["rate (out of 5)"],
+    errors="coerce"
+)
+
+# Remove invalid rows
+data.dropna(
+    subset=[
+        "avg cost (two people)",
+        "rate (out of 5)"
+    ],
+    inplace=True
+)
 
 
 def recommend_restaurants(
+    city,
     cuisine,
     budget,
     min_rating,
-    restaurant_type,
-    location
+    restaurant_type
 ):
 
     filtered = data[
+        (data["city"].str.contains(city, case=False, na=False))
+        &
         (data["cuisines type"].str.contains(cuisine, case=False, na=False))
         &
         (data["avg cost (two people)"] <= budget)
@@ -22,14 +52,6 @@ def recommend_restaurants(
         (
             data["restaurant type"].str.contains(
                 restaurant_type,
-                case=False,
-                na=False
-            )
-        )
-        &
-        (
-            data["area"].str.contains(
-                location,
                 case=False,
                 na=False
             )
@@ -47,17 +69,27 @@ def recommend_restaurants(
             "restaurant type",
             "cuisines type",
             "rate (out of 5)",
-            "avg cost (two people)"
+            "avg cost (two people)",
+            "city",
+            "area"
         ]
     ].head(10)
 
+
 if __name__ == "__main__":
+
     results = recommend_restaurants(
+        city="Mumbai",
         cuisine="Indian",
-        budget=500,
+        budget=1000,
         min_rating=4.0,
-        restaurant_type="Quick Bites",
-        location="HSR"
+        restaurant_type="Restaurant"
     )
 
-    print(results)
+for _, row in results.iterrows():
+
+    print("\nRestaurant:", row["restaurant name"])
+    print("Cuisine:", row["cuisines type"])
+    print("Rating:", row["rate (out of 5)"])
+    print("Cost:", row["avg cost (two people)"])
+    print("City:", row["city"])
