@@ -1,7 +1,34 @@
 import pandas as pd
 
-# Load dataset
-data = pd.read_csv("dataset/cleaned_zomato.csv")
+# Load final merged dataset
+data = pd.read_csv("dataset/final_restaurants.csv")
+
+# Convert cost column to numeric
+data["avg cost (two people)"] = (
+    data["avg cost (two people)"]
+    .astype(str)
+    .str.replace("₹", "", regex=False)
+    .str.replace(",", "", regex=False)
+)
+
+data["avg cost (two people)"] = pd.to_numeric(
+    data["avg cost (two people)"],
+    errors="coerce"
+)
+
+# Convert rating column to numeric
+data["rate (out of 5)"] = pd.to_numeric(
+    data["rate (out of 5)"],
+    errors="coerce"
+)
+
+# Remove invalid rows
+data.dropna(
+    subset=[
+        "avg cost (two people)",
+        "rate (out of 5)"
+    ],
+    inplace=True)
 
 
 def compare_restaurants(restaurant1, restaurant2):
@@ -55,19 +82,16 @@ def compare_restaurants(restaurant1, restaurant2):
     score1 = 0
     score2 = 0
 
-    # Rating Score
     if restaurant1_data["rate (out of 5)"] > restaurant2_data["rate (out of 5)"]:
         score1 += 1
     elif restaurant2_data["rate (out of 5)"] > restaurant1_data["rate (out of 5)"]:
         score2 += 1
 
-    # Budget Score
     if restaurant1_data["avg cost (two people)"] < restaurant2_data["avg cost (two people)"]:
         score1 += 1
     elif restaurant2_data["avg cost (two people)"] < restaurant1_data["avg cost (two people)"]:
         score2 += 1
 
-    # Overall Winner
     if score1 > score2:
         overall_winner = restaurant1_data["restaurant name"]
     elif score2 > score1:

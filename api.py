@@ -1,9 +1,13 @@
+import os
+
 from flask import Flask, request, jsonify
+from flask_cors import CORS
 
 from smart_recommendation import recommend_restaurants
 from compare_restaurants import compare_restaurants
 
 app = Flask(__name__)
+CORS(app)
 
 
 @app.route("/recommend", methods=["POST"])
@@ -23,7 +27,6 @@ def recommend():
         budget,
         min_rating,
         restaurant_type
-
     )
 
     return jsonify(
@@ -47,5 +50,16 @@ def compare():
     return jsonify(results)
 
 
+@app.route("/")
+def home():
+    return jsonify({
+        "message": "Restaurant Recommendation API is running successfully!"
+    })
+
+
 if __name__ == "__main__":
-    app.run(debug=True)
+    app.run(
+        host="0.0.0.0",
+        port=int(os.environ.get("PORT", 5000)),
+        debug=False
+    )
